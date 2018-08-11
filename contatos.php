@@ -22,6 +22,7 @@ function sanitize($v) {
 // Inicializando variáveis que contém valores dos campos
 $nome = '';
 $email = '';
+$assunto = '';
 $mensagem = '';
 
 // Inicializando variável que contém mensagens de erro
@@ -36,6 +37,7 @@ if (strtoupper($_SERVER["REQUEST_METHOD"]) === "POST") {
 	// Sanitizando dados vindos do form
 	$nome = sanitize($_POST['nome']);
 	$email = sanitize($_POST['email']);
+	$assunto = sanitize($_POST['assunto']);
 	$mensagem = sanitize($_POST['mensagem']);
 
 	// Validando 'nome'
@@ -51,6 +53,14 @@ if (strtoupper($_SERVER["REQUEST_METHOD"]) === "POST") {
 	// Validando 'email'
 	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$erro .= "<li>Seu e-mail não é válido.</li>"; 
+	}
+
+	// Validando 'assunto' que deve ter pelo menos 3 caracteres quaisquer
+	$contaAssunto = strlen($assunto);
+	if ($contaAssunto == 0) {
+		$erro .= "<li>Escreva um assunto para o contato.</li>";
+	} elseif ($contaAssunto < 3) {
+		$erro .= "<li>O assunto está muito curto.</li>";
 	}
 
 	// Validando 'mensagem' que deve ter pelo menos 5 caracteres quaisquer
@@ -86,6 +96,7 @@ if (strtoupper($_SERVER["REQUEST_METHOD"]) === "POST") {
 		<ul>
 		<li><b>Nome:</b> {$nome}</li>
 		<li><b>E-mail:</b> {$email}</li>
+		<li><b>Assunto:</b> {$assunto}</li>
 		</ul>
 		<hr><pre>{$mensagem}</pre><hr>
 		</body></html>
@@ -103,7 +114,7 @@ if (strtoupper($_SERVER["REQUEST_METHOD"]) === "POST") {
 		// Enviando e-mail
 		// Lembre-se que o XAMPP não envia e-mail
 		// O '@' antes da função 'mail()' evita que essa gere mensagem de erro no XAMPP
-		@mail($mailDestinatario, $mailMensagem, $mailHeader);
+		@mail($mailDestinatario, $mailAssunto, $mailMensagem, $mailHeader);
 
 		/////////////////////////////////////////
 		// Armazena mensagem no banco de dados //
@@ -113,7 +124,7 @@ if (strtoupper($_SERVER["REQUEST_METHOD"]) === "POST") {
 		require('conn.php');
 
 		// Preparando query
-		$sql = "INSERT INTO `contatos` (`id`, `nome`, `email`, `sugestao`, `data`, `status`) VALUES (NULL, '{$nome}', '{$email}', '{$mensagem}', NOW(), '1');";
+		$sql = "INSERT INTO `contatos` (`id`, `nome`, `email`, `assunto`, `mensagem`, `data`, `status`) VALUES (NULL, '{$nome}', '{$email}', '{$assunto}', '{$mensagem}', NOW(), '1');";
 
 		// Executando query
 		if (mysqli_query($conn, $sql)) {
@@ -124,6 +135,7 @@ if (strtoupper($_SERVER["REQUEST_METHOD"]) === "POST") {
 			// Esvazia campos já preenchidos
 			$nome = '';
 			$email = '';
+			$assunto = '';
 			$mensagem = '';
 
 		} else {
@@ -142,42 +154,27 @@ if (strtoupper($_SERVER["REQUEST_METHOD"]) === "POST") {
 <form name="contatos" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>">
 
 <?php
-$modalTitle = "";
-$modalBody = "";
 // Exibe as mensagens de erro caso elas existam
-if($erro != ''):
-	$modalTitle = "Ooops!";
-	$modalBody = "<p>Ocorreram erros que impedem o envio da mensagem:</p>";
-	$modalBody .= "<ul>{$erro}</ul>";
-	$modalBody .= "<p>Por favor, corrija os erros e tente novamente.</p>";
-endif;
+if($erro != '') {
+	echo "<div class=\"erro\">";
+	echo "<h3>Ooops!</h3>";
+	echo "<p>Ocorreram erros que impedem o envio da mensagem:</p>";
+	echo "<ul>{$erro}</ul>";
+	echo "<p>Por favor, corrija os erros e tente novamente.</p>";
+	echo "</div>";
+}
 
-if($sucesso):
-	$modalTitle = "Obrigado!";
-	$modalBody = "<p>Seu contato foi enviado com sucesso...</p>";
-endif;	
+// Exibe mensagem de sucesso
+if($sucesso) {
+	echo "<div class=\"sucesso\">";
+	echo "<h3>Obrigado!</h3>";
+	echo "<p>Seu contato foi enviado com sucesso...</p>";
+	echo "</div>";	
+}
 ?>
 
-<div id="myModal" class="modal">
-	<div class="modal-content">
-		<div class="modal-header">
-			<span class="close">&times;</span>
-			<h2><?php echo $modalTitle ?></h2>
-		</div>
-		<div class="modal-body"><?php echo $modalBody ?></div>
-		<!-- div class="modal-footer"><h3>Modal Footer</h3></div -->
-	</div>
-</div>
-
-<?php if($erro != '' OR $sucesso): ?>
-	<script>
-	var modal = document.getElementById('myModal');
-	modal.style.display = "block";
-	</script>
-<?php endif; ?>
-<main align="center">
-<h2>Envie uma sugestão</h2>
-<p>Preencha corretamente o formulário abaixo para enviar uma sugestão.</p>
+<h2>Faça Contato</h2>
+<p>Preencha corretamente o formulário abaixo para entrar em contato conosco.</p>
 
 <p>
 	<label for="nome">Nome:</label>
@@ -188,7 +185,11 @@ endif;
 	<input type="text" name="email" id="email" placeholder="Seu e-mail válido" value="<?php echo $email ?>">
 </p>
 <p>
-	<label for="mensagem">Sugestão:</label>
+	<label for="assunto">Assunto:</label>
+	<input type="text" name="assunto" id="assunto" placeholder="Assunto da mensagem" value="<?php echo $assunto ?>">
+</p>
+<p>
+	<label for="mensagem">Mensagem:</label>
 	<textarea name="mensagem" id="mensagem" placeholder="Sua mensagem"><?php echo $mensagem ?></textarea>
 </p>
 <p>
@@ -199,33 +200,7 @@ endif;
 
 </form>
 </main>
-<script>
-// Get the modal
 
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-//btn.onclick = function() {
-    // modal.style.display = "block";
-//}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
 <?php
 require ('_footer.php');
 ?>

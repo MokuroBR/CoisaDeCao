@@ -16,8 +16,8 @@ if($_SERVER['SERVER_NAME'] == 'localhost') {
 	<title>Coisa de Cão <?php echo $titulo; ?></title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" href="favicon.png">
-	<link rel="icon" href="favicon.png">
+	<link rel="shortcut icon" href="css/favicon.ico">
+	<link rel="icon" href="css/favicon.ico">
 	<link rel="normalize" href="/css/normalize.css">
 	<link rel="stylesheet" href="css/global.css?<?php if($_SERVER['SERVER_NAME'] == 'localhost') echo rand() ?>">
 	<link rel="stylesheet" href="<?php echo $css; ?>">
