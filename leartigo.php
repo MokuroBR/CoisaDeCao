@@ -1,4 +1,5 @@
-﻿<?php
+﻿
+<?php
 $titulo = "Notícias"; // Título desta página
 $css = "css/artigos.css"; // CSS desta página
 $botao = "noticias"; // Botão que ficará ativo no menu principal
@@ -7,6 +8,7 @@ require ('_header.php'); // Executa o cabeçalho da página
 require('conn.php');
 ?>
 
+<content align="center">
 <?php
 // Obtém ID do artigo solicitado
 if(isset($_GET['id'])) {
@@ -34,17 +36,17 @@ $cat = explode(",", $artigo['categorias']);
 echo "<h2>{$artigo['titulo']}</h2>\n";
 echo "<p><i>Por {$artigo['autor']} em {$artigo['databr']}.</i></p>\n";
 echo "<div class=\"textoArtigo\">{$artigo['texto']}</div>\n";
-echo "<h4>Categorias</h4>\n";
 echo "<ul>\n";
 foreach($cat AS $listCat) {
 	$listCat = trim($listCat);
-	echo "<li>{$listCat}</li>\n";
+	echo "{$listCat}\n";
 }
 echo "</ul>\n";
-echo "<p><a href=\"\listartigos.php\">Lista de Artigos</a></p>\n";
+echo "<p><a href=\"\listartigos.php\">Voltar</a></p>\n";
 ?>
 
 <?php
 
 require ('_footer.php');
 ?>
+</content>

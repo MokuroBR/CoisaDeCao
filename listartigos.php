@@ -1,5 +1,5 @@
 ﻿<?php
-$titulo = "Notícias"; // Título desta página
+$titulo = "| Artigos"; // Título desta página
 $css = "css/artigos.css"; // CSS desta página
 $botao = "noticias"; // Botão que ficará ativo no menu principal
 require ('_header.php'); // Executa o cabeçalho da página
@@ -14,8 +14,8 @@ require('conn.php');
 <?php
 // Query que lê artigos na ordem das datas do mais novo para o mais antigo
 // Não lê artigos futuros
-$sql = "SELECT ID, data, titulo, resumo, imagem, categorias FROM artigos WHERE data <= NOW() AND status = '1' ORDER BY data DESC";
-
+$sql = "SELECT ID, data, titulo, resumo, imagem FROM artigos WHERE data <= NOW() AND status = '1' ORDER BY data DESC";
+// die($sql);
 // Executa a query
 $res = mysqli_query($conn, $sql);
 

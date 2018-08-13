@@ -156,8 +156,8 @@ nav a:hover, .navActive {
 }
 
 footer {
-	background: #3bc9ed;
-	color: #dddddd;
+	background: #71a9b6;
+	color: #71a9b6;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
