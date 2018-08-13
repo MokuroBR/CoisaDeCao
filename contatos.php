@@ -172,7 +172,7 @@ if($sucesso) {
 	echo "</div>";	
 }
 ?>
-
+<div align="center">
 <h2>Faça Contato</h2>
 <p>Preencha corretamente o formulário abaixo para entrar em contato conosco.</p>
 
@@ -195,9 +195,8 @@ if($sucesso) {
 <p>
 	<label></label>
 	<button type="submit">Enviar</button>
-	<small> ← Clique somente uma vez no botão</small>
 </p>
-
+</div>
 </form>
 </main>
 

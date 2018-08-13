@@ -18,9 +18,32 @@ if($_SERVER['SERVER_NAME'] == 'localhost') {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="css/favicon.ico">
 	<link rel="icon" href="css/favicon.ico">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="normalize" href="/css/normalize.css">
-	<link rel="stylesheet" href="css/global.css?<?php if($_SERVER['SERVER_NAME'] == 'localhost') echo rand() ?>">
+	<link rel="stylesheet" href="/css/global.css?<?php if($_SERVER['SERVER_NAME'] == 'localhost') echo rand() ?>">
 	<link rel="stylesheet" href="<?php echo $css; ?>">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+jQuery("#subirTopo").hide();
+
+jQuery('a#subirTopo').click(function () {
+         jQuery('body,html').animate({
+           scrollTop: 0
+         }, 800);
+        return false;
+   });
+
+jQuery(window).scroll(function () {
+         if (jQuery(this).scrollTop() > 1000) {
+            jQuery('#subirTopo').fadeIn();
+         } else {
+            jQuery('#subirTopo').fadeOut();
+         }
+     });
+});
+</script>
 </head>
 <body>
 <a id="topo"></a>
